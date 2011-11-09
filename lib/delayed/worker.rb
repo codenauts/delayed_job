@@ -83,6 +83,9 @@ module Delayed
       self.class.max_priority = options[:max_priority] if options.has_key?(:max_priority)
       self.class.sleep_delay = options[:sleep_delay] if options.has_key?(:sleep_delay)
       self.class.queues = options[:queues] if options.has_key?(:queues)
+      
+      self.class.queues << "generic" # Default queue
+      self.class.queues << Socket.gethostname # Host specific queue
 
       self.plugins.each { |klass| klass.new }
     end
