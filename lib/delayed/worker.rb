@@ -61,12 +61,14 @@ module Delayed
     end
 
     def self.after_fork
-      # Re-open file handles
-      @files_to_reopen.each do |file|
-        begin
-          file.reopen file.path, "a+"
-          file.sync = true
-        rescue ::Exception
+      if @files_to_reopen
+        # Re-open file handles
+        @files_to_reopen.each do |file|
+          begin
+            file.reopen file.path, "a+"
+            file.sync = true
+          rescue ::Exception
+          end
         end
       end
 
