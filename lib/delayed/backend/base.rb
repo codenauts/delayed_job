@@ -95,7 +95,16 @@ module Delayed
             hook :success
           rescue Exception => e
             hook :error, e
-            raise e
+            begin
+              klass = Module.const_get("Airbrake")
+              if klass.present?
+                Airbrake.notify(e)
+              else
+                raise e
+              end
+            rescue
+              raise e
+            end
           ensure
             hook :after
           end
