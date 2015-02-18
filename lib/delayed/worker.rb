@@ -113,6 +113,9 @@ module Delayed
 
       say "Starting job worker"
 
+      total = 0
+      max_rpm = 12500
+
       self.class.lifecycle.run_callbacks(:execute, self) do
         loop do
           self.class.lifecycle.run_callbacks(:loop, self) do
@@ -123,8 +126,9 @@ module Delayed
             end
 
             count = result.sum
+            total += count
 
-            break if @exit
+            break if @exit or total > max_rpm
 
             if count.zero?
               sleep(self.class.sleep_delay)
@@ -133,7 +137,7 @@ module Delayed
             end
           end
 
-          break if @exit
+          break if @exit or total > max_rpm
         end
       end
     end
