@@ -177,7 +177,7 @@ module Delayed
       # Notify airbrake first
       klass = Module.const_get("Airbrake")
       if klass.present?
-        Airbrake.notify(e)
+        Airbrake.notify(error)
       end
 
       # Then reschedule
