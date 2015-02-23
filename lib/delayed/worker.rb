@@ -181,10 +181,10 @@ module Delayed
       end
 
       # Then reschedule
-      self.class.lifecycle.run_callbacks(:error, self, job){ handle_failed_job(job, error) }
+      handle_failed_job(job, error)
       return false  # work failed
     rescue Exception => error
-      self.class.lifecycle.run_callbacks(:error, self, job){ handle_failed_job(job, error) }
+      handle_failed_job(job, error)
       return false  # work failed
     end
 
@@ -231,7 +231,7 @@ module Delayed
     # If no jobs are left we return nil
     def reserve_and_run_one_job
       job = Delayed::Job.reserve(self)
-      self.class.lifecycle.run_callbacks(:perform, self, job){ result = run(job) } if job
+      result = run(job) if job
     end
   end
 

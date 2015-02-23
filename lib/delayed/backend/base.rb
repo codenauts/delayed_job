@@ -95,7 +95,7 @@ module Delayed
             hook :success
           rescue Exception => e
             hook :error, e
-            raise e
+            #raise e
           ensure
             hook :after
           end
