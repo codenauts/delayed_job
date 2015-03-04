@@ -114,7 +114,7 @@ module Delayed
       say "Starting job worker"
 
       total = 0
-      max_rpm = 12500
+      max_rpm = 12500 + rand(7500)
 
       self.class.lifecycle.run_callbacks(:execute, self) do
         loop do
