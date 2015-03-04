@@ -173,17 +173,11 @@ module Delayed
       end
       say "#{job.name} completed after %.4f" % runtime
       return true  # did work
-    rescue StandardError => error
-      # Notify airbrake first
-      klass = Module.const_get("Airbrake")
-      if klass.present?
-        Airbrake.notify(error)
-      end
-
-      # Then reschedule
-      self.class.lifecycle.run_callbacks(:error, self, job){ handle_failed_job(job, error) }
-      return false  # work failed
-    rescue Exception => error
+    rescue DeserializationError => error
+      job.last_error = "#{error.message}\n#{error.backtrace.join("\n")}"
+      failed(job)
+      return false
+    rescue => error
       self.class.lifecycle.run_callbacks(:error, self, job){ handle_failed_job(job, error) }
       return false  # work failed
     end
