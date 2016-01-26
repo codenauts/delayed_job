@@ -160,7 +160,7 @@ module Delayed
         else
           break  # leave if no work could be done
         end
-        break if $exit # leave if we're exiting
+        break if @exit # leave if we're exiting
       end
 
       return [success, failure]
